@@ -6,4 +6,5 @@ def main():
     clearMetadata()
     mergeContent()
     addMetadata()
+    gather_stats()
     

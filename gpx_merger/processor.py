@@ -4,6 +4,8 @@ import os
 import fileinput
 import shutil
 import file_sorter
+import gpxpy
+import gpxpy.gpx
 
 input_directory = "input"
 output_directory = "output"
@@ -57,4 +59,26 @@ def addMetadata():
             output_file.write(input_file.read())
             output_file.writelines(footer_lines)
             os.replace("temp.gpx", output_filename)
+    os.chdir("..")
+
+def gather_stats():
+    os.chdir(input_directory)
+
+    total_distance = 0
+
+    for filename in file_sorter.sortByNameWithExtension("*.gpx"):
+        gpx_file = open(filename, 'r')
+        gpx = gpxpy.parse(gpx_file)
+
+        for track in gpx.tracks:
+            for segment in track.segments:
+                for index, point in enumerate(segment.points):
+                    if index != len(segment.points) - 1:
+                        local_distance = segment.points[index].distance_2d(segment.points[index + 1])
+                        if local_distance/1000 > 5:
+                            pass
+                        else:
+                            total_distance += local_distance
+
+    print("Total covered distance: %.1f kms" % (total_distance/1000))
     os.chdir("..")

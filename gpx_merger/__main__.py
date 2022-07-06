@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import __init__
+from __init__ import *
 
 if __name__=="__main__":
-    __init__.main()
+    main()
